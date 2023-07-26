@@ -4,19 +4,25 @@ import { loginStyle } from '../theme/loginTheme';
 import { WhiteLogo } from '../components/WhiteLogo';
 import { useForm } from '../hooks/useForm';
 import { StackScreenProps } from '@react-navigation/stack';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthaContext';
 
 interface Props extends StackScreenProps<any, any>{}
 
 export const RegisterScreen = ({navigation}:Props) => {
-  const {email, password, name, onChange} = useForm({
-    name:'',
+
+  const {singUp} = useContext(AuthContext)
+
+  const {email, password, nombre, onChange} = useForm({
+    nombre:'',
     email:'',
     password:''
   })
 
   const onRegister = () => {
-    console.log({email, password, name});
+    console.log({email, password, nombre});
     Keyboard.dismiss();
+    singUp({correo:email, password:password, nombre:nombre})
   }
   const colerRegiste ='#5856d6'
   return (
@@ -38,8 +44,8 @@ export const RegisterScreen = ({navigation}:Props) => {
                 placeholderTextColor="rgba(255,255,255,0.4)"
                 underlineColorAndroid="white"
                 style={loginStyle.inputField}
-                onChangeText={(value) => onChange(value, 'email')}
-                value={email}
+                onChangeText={(value) => onChange(value, 'nombre')}
+                value={nombre}
                 onSubmitEditing={onRegister}
                 selectionColor="white"
                 autoCapitalize="words"

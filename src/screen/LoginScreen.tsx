@@ -1,23 +1,44 @@
-import React from 'react';
-import { KeyboardAvoidingView, Platform, Text,TextInput, TouchableOpacity, View, Keyboard } from 'react-native';
+import React,{useContext, useEffect} from 'react';
+import { KeyboardAvoidingView, Platform, Text,TextInput, TouchableOpacity, View, Keyboard, Alert } from 'react-native';
 import { Backgroud } from '../components/Backgroud';
 import { WhiteLogo } from '../components/WhiteLogo';
 import { loginStyle } from '../theme/loginTheme';
 import { useForm } from '../hooks/useForm';
 import { StackScreenProps } from '@react-navigation/stack';
+import { AuthContext } from '../context/AuthaContext';
 
 interface Props extends StackScreenProps<any, any>{}
 
 export const LoginScreen = ({navigation}:Props) => {
+
+  const {signIn,errorMessage, removeError} = useContext(AuthContext)
+
   const {email, password, onChange} = useForm({
     email:'',
     password:'',
   });
 
+  useEffect(() => {
+    if(errorMessage.length === 0) return
+    Alert.alert(
+      'Login incorrecto', 
+      errorMessage,
+      [
+        {
+          text:'ok',
+          onPress:removeError
+        }
+      ]
+    )
+  }, [errorMessage])
+  
   const onlogin = () => {
     console.log({email, password});
     //el teclado se quita luego de logear
     Keyboard.dismiss();
+
+    //envias en pbejeto el email el password
+    signIn({correo: email, password: password})
   };
   return (
     <>
